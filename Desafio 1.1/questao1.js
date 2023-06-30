@@ -8,7 +8,7 @@ export class Vertice {
     }
 
     distancia(vertice) {
-        return Math.sqrt(Math.pow(vertice.x - this.x) + Math.pow(vertice.y - this.y));
+        return Math.sqrt(Math.pow(vertice.x - this.x,2) + Math.pow(vertice.y - this.y,2));
     }
 
     move(x,y) {
