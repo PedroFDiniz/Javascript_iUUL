@@ -27,8 +27,8 @@ export class Vertice {
 }
 
 let rodando = true;
+const prompt = PromptSync({sigint:true});
 while (rodando) {
-    const prompt = PromptSync({sigint:true});
     console.log("Vertice 1");
     let nome1 = prompt('X Y: ');
     let xy1 = nome1.split(" ");
