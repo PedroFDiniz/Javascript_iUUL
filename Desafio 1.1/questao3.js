@@ -35,12 +35,12 @@ class Poligono {
 let rodando = true;
 let indice = 1;
 let argumentos = []
+const prompt = PromptSync({sigint:true});
 while (rodando) {
-    const prompt = PromptSync({sigint:true});
     console.log("Vertice "+indice);
     let nome = prompt('X Y: ');
     console.log("");
-    if (nome == "" || nome == null) {
+    if (nome === undefined) {
         rodando = false;
         break;
     }

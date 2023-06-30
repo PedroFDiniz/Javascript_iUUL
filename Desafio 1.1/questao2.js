@@ -4,7 +4,7 @@ class Triangulo {
     constructor(v1,v2,v3) {
         let slope1 = (v2.y - v1.y)/(v2.x - v1.x);
         let slope2 = (v3.y - v2.y)/(v3.x - v2.x);
-        if (slope1 == slope2) {throw new Error("Os vertices nao formam um triangulo!")};
+        if (slope1 === slope2) {throw new Error("Os vertices nao formam um triangulo!")};
         this.v1 = v1;
         this.v2 = v2;
         this.v3 = v3;
