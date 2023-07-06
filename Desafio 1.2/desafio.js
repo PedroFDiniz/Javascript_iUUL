@@ -45,7 +45,8 @@ class Paciente {
      */
     static validaCPF(cpf) {
         // Checa se 'cpf' tem tamanho 11
-        if (cpf.length !== 11) {
+        // A conversão para String é para o caso do objeto passado ser um numero
+        if (String(cpf).length !== 11) {
             return false;
         }
 
