@@ -160,6 +160,13 @@ class Consulta {
         return (this.#dataConsulta > agora);
     }
 
+    coincideCom(outraConsulta) {
+        if ((this.data_da_consulta > outraConsulta.data_da_consulta && this.data_da_consulta < outraConsulta.fim_da_consulta)
+            || (outraConsulta.data_da_consulta > this.data_da_consulta && outraConsulta.data_da_consulta < this.fim_da_consulta)) {
+                return true;
+        } return false;
+    }
+
     equals(outraConsulta) {
         if (!this.CPF.equals(outraConsulta.CPF)) {
             return false;
@@ -181,6 +188,10 @@ class Consultorio {
     // #cadastros é um objeto do tipo Map<Paciente, Consulta[]>
     #cadastros;
 
+    // Para sinalizar o horário de funcionamento do consultório
+    #HORARIO_ABERTURA = "0800";
+    #HORARIO_FECHAMENTO = "1900";
+
     constructor(cadastros) {
         // Caso não seja passado nenhum parâmetro
         if (cadastros === undefined) {
@@ -190,6 +201,27 @@ class Consultorio {
         }
     }
 
+    get pacientes() {
+        return this.#cadastros.keys();
+    }
+
+    get consultas() {
+        let resultado = [];
+        for (let listaDeConsultas of this.#cadastros.values()) {
+            resultado = resultado.concat(listaDeConsultas);
+        } return resultado;
+    }
+
+    get cadastros() {
+        return this.#cadastros.entries();
+    }
+
+    /* Cadastra um Paciente no mapa do consultório.
+     * @param String contendo os 11 dígitos de um CPF válido para o Paciente.
+     * @param String de tamanho mínimo 5 referente ao nome do paciente.
+     * @param String contendo a data de nascimento do paciente, no formato "DD/MM/AAAA".
+     * @return Um booleano confirmando se o paciente foi cadastrado com sucesso.
+     */
     cadastrar(cpf, nome, dataNascimento) {
         let novoPaciente = new Paciente(cpf, nome, dataNascimento);
         for (let paciente of this.#cadastros.keys()) {
@@ -201,6 +233,10 @@ class Consultorio {
         return true;
     }
 
+    /* Remove um Paciente do mapa do consultório.
+     * @param String contendo os 11 dígitos de um CPF válido para o Paciente.
+     * @return Um booleano confirmando se o paciente foi retirado do mapa com sucesso.
+     */
     descadastrar(cpf) {
         // Cria um paciente generico só para facilitar a pesquisa
         let aRemover = new Paciente(cpf);
@@ -217,6 +253,87 @@ class Consultorio {
                 return true;
             }
         } return false;
+    }
+
+    /* Busca um paciente pelo seu CPF dentro do mapa de cadastros do consultório.
+     * @param Uma String correspondente ao CPF do paciente buscado.
+     * @return Um objeto Paciente se algum com o CPF passado estiver presente nas chaves do mapa, ou undefined caso contrário.
+     */
+    buscarPaciente(cpf) {
+        let buscado = new CPF(cpf);
+        for (let paciente of this.#cadastros.keys()) {
+            if (paciente.CPF.equals(buscado)) return paciente;
+        } return;
+    }
+
+    hasConsultaAgendada(paciente) {
+        for (let consulta of this.#cadastros[paciente]) {
+            if (consulta.isPendente()) {
+                return true;
+            }
+        } return false;
+    }
+
+    /* Adiciona uma consulta ao cadastro do paciente no Consultório.
+     * Os parâmetros são todos em forma de String, e a função lançará um InvalidInputError caso algum não esteja adequado.
+     * Não admite um agendamento caso exista alguma consulta já agendada.
+     * Não permite agendamento caso os horários estejam fora do limite de funcionamento do consultório.
+     *
+     * @param String correspondente aos 11 dígitos do CPF do paciente buscado.
+     * @param String correspondente à data da consulta a ser agendada. Formato "DD/MM/AAAA".
+     * @param String contendo o horário inicial da consulta. Formato "HHmm".
+     * @param String contendo o horário de término da consulta. Formato "HHmm".
+     * @return Um booleano indicando se a consulta foi adicionada ao mapa do consultório ou não.
+     */
+    agendarConsulta(cpf, data, horaInicial, horaFinal) {
+        let paciente = this.buscarPaciente(cpf);
+        if (paciente === undefined) {
+            return false;
+        }
+        if (this.hasConsultaAgendada(paciente)) {
+            return false;
+        }
+
+        // Checa se o horário está dentro do horário de funcionamento do consultório
+        if (Number(horaInicial) < Number(this.#HORARIO_ABERTURA) || Number(horaFinal) > Number(this.#HORARIO_FECHAMENTO)) {
+            return false;
+        }
+        let novaConsulta = new Consulta(cpf, data, horaInicial, horaFinal);
+
+        // Checa se a nova consulta coincide em horário com alguma outra consulta do paciente
+        for (let consulta of this.#cadastros[paciente]) {
+            if (consulta.coincideCom(novaConsulta)) {
+                return false;
+            }
+        }
+        // Inserir a consulta criada no array que é retornado como valor da chave 'paciente' no mapa #cadastros
+        this.#cadastros[paciente].push(novaConsulta);
+        return true;
+    }
+
+    /* Remove uma consulta do mapa de um paciente, caso data e hora passados sejam válidos, o paciente exista e a consulta esteja no mapa.
+     * @param String correspondente aos 11 dígitos do CPF do paciente buscado.
+     * @param String correspondente à data da consulta a ser agendada. Formato "DD/MM/AAAA".
+     * @param String contendo o horário inicial da consulta. Formato "HHmm".
+     * @return Um booleano confirmando se a consulta buscada foi removida.
+     */
+    cancelarConsulta(cpf, data, horaInicial) {
+        if (!Validacao.hora(horaInicial) || Validacao.data(data)) {
+            return false;
+        }
+        let paciente = this.buscarPaciente(cpf);
+        if (paciente === undefined) {
+            return false;
+        }
+
+        let horario = Validacao.criaHorario(data, horaInicial);
+        for (let consulta of this.#cadastros[paciente]) {
+            if (consulta.data_da_consulta === horario) {
+                this.#cadastros[paciente].splice(consulta);
+                return true;
+            }
+        } return false;
+
     }
 }
 
@@ -313,7 +430,7 @@ class Validacao {
         if (!Validacao.data(data)) {
             return false;
         }
-        if (!Validacao.hora(horaInicial) || !Validacao.hora(horaFinal)) {
+        if (!Validacao.hora(horaInicial) || (horaFinal === undefined? false : !Validacao.hora(horaFinal))) {
             return false;
         }
         if (!(Number(horaFinal) > Number(horaInicial))) {
@@ -345,12 +462,14 @@ class Validacao {
      */
     static criaData(string) {
         let componentes = string.split("/");
-        let data = new Date(componentes[2],componentes[1]-1,componentes[0]);
+        let data = new Date(componentes[2], componentes[1] - 1, componentes[0]);
         return data;
     }
 
     /* Cria um objeto Date a partir da data e da hora passadas como parâmetro no formato String.
-     * @param Duas Strings, a primeira com a data no formato "DD/MM/AAAA", e a segunda no formato "HHmm".
+     * É recomendável validar o input com a função 'Validacao.dataDeConsulta(...)' antes.
+     * @param String com a data no formato "DD/MM/AAAA".
+     * @param String com horário no formato "HHmm"
      * @return Um objeto Date com as data e hora passadas.
      */
     static criaHorario(data, hora) {
@@ -360,6 +479,21 @@ class Validacao {
         resultado.setHours(horas, minutos);
         return resultado;
     }
+}
+
+class CLI {
+    #estado;
+    #consultorio;
+    string_layout1 = ["Menu Principal", "1-Cadastro de pacientes", "2-Agenda", "3-Fim"];
+    string_layout2 = ["Menu do Cadastro de Pacientes","1-Cadastrar novo paciente", "2-Excluir paciente", "3-Listar pacientes (ordenado por CPF)", "4-Listar pacientes (ordenado por nome)", "5-Voltar p/ menu principal"];
+    string_layout3 = ["Agenda", "1-Agendar consulta", "2-Cancelar agendamento", "3-Listar agenda", "4-Voltar p/ menu principal"];
+    
+    constructor() {
+        this.#estado = 0;
+        this.#consultorio = new Consultorio();
+    }
+
+    
 }
 
 let cpf1 = CPF.geraCPF();
