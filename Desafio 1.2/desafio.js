@@ -487,7 +487,7 @@ class CLI {
     string_layout1 = ["Menu Principal", "1-Cadastro de pacientes", "2-Agenda", "3-Fim"];
     string_layout2 = ["Menu do Cadastro de Pacientes","1-Cadastrar novo paciente", "2-Excluir paciente", "3-Listar pacientes (ordenado por CPF)", "4-Listar pacientes (ordenado por nome)", "5-Voltar p/ menu principal"];
     string_layout3 = ["Agenda", "1-Agendar consulta", "2-Cancelar agendamento", "3-Listar agenda", "4-Voltar p/ menu principal"];
-    
+
     constructor() {
         this.#estado = 0;
         this.#consultorio = new Consultorio();
@@ -496,27 +496,4 @@ class CLI {
     
 }
 
-let cpf1 = CPF.geraCPF();
-let cpf2 = CPF.geraCPF();
-let cpf3 = CPF.geraCPF();
-let cpf4 = CPF.geraCPF();
-let cpf5 = CPF.geraCPF();
-//console.log(cpf1.toString() + " " + cpf2.toString() + " " + cpf3.toString() + " " + cpf4.toString() + " " + cpf5.toString() + "\n");
-//let p1 = new Paciente(cpf1);
-//let p2 = new Paciente(cpf2);
-//let p3 = new Paciente(cpf3);
-//let p4 = new Paciente(cpf4);
-//let p5 = new Paciente(cpf5);
-//console.log(p1.toString() + "\n");
-//console.log(p2.toString() + "\n");
-//console.log(p3.toString() + "\n");
-//console.log(p4.toString() + "\n");
-//console.log(p5.toString() + "\n");
-
-let c1 = new Consultorio();
-c1.cadastrar(cpf1,"Manuel")
-c1.cadastrar(cpf2,"Manuela")
-c1.cadastrar(cpf3,"Paulo")
-c1.cadastrar(cpf4,"Maria")
-c1.cadastrar(cpf5,"Miguel")
-console.log(c1);
+let cli = new CLI();
