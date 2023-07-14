@@ -738,27 +738,93 @@ class CLI {
     }
 
     listarCPFs() {
-        let mapa = new Map([...this.#consultorio.cadastros].sort( this.comparaPacientes ));
+        let mapa = new Map([...this.#consultorio.cadastros].sort( this.comparaPacientesPorCPF ));
         this.imprimeMapa(mapa);
         return Estados.CADASTRO;
     }
 
     agendarConsulta() {
         let cpf;
+        let data;
+        let hInicial;
+        let hFinal;
         let cpfValido = false;
+        let dataValida = false;
+        let hInicialValida = false;
+        let hFinalValida = false;
+
         while (!cpfValido) {
             cpf = this.input("CPF: ");
             cpfValido = this.testaCPF(cpf);
-        } this.#consultorio.agendarConsulta(cpf);
-        console.log("Paciente excluído com sucesso!");
-        return Estados.AGENDA;
+        }
+        while (!dataValida) {
+            data = this.input("Data da consulta: ");
+            dataValida = Validacao.data(data);
+        }
+        while (!hInicialValida) {
+            hInicial = this.input("Hora inicial: ");
+            hInicialValida = Validacao.hora(hInicial);
+        }
+        while (!hFinalValida) {
+            hFinal = this.input("Hora final: ");
+            hFinalValida = Validacao.hora(hFinal);
+        }
+
+        try {
+            this.#consultorio.agendarConsulta(cpf,data,hInicial,hFinal);
+            console.log("Agendamento realizado com sucesso!");
+        } catch (erro) {
+            console.log("Erro: " + erro.message);
+        } return Estados.AGENDA;
     }
 
     cancelarConsulta() {
+        let cpf;
+        let data;
+        let hInicial;
+        let cpfValido = false;
+        let dataValida = false;
+        let hInicialValida = false;
+        while (!cpfValido) {
+            cpf = this.input("CPF: ");
+            cpfValido = this.testaCPF(cpf);
+        }
+        while (!dataValida) {
+            data = this.input("Data da consulta: ");
+            dataValida = Validacao.data(data);
+        }
+        while (!hInicialValida) {
+            hInicial = this.input("Hora inicial: ");
+            hInicialValida = Validacao.hora(hInicial);
+        }
+
+        try {
+            if ( !this.#consultorio.cancelarConsulta(cpf, data, hInicial) ) {
+                console.log("Erro: agendamento não encontrado");
+            } else {
+                console.log("Erro: agendamento cancelado com sucesso!");
+            }
+
+        } catch (erro) {
+            console.log("Erro: " + erro.message);
+        }
         return Estados.AGENDA;
     }
 
     listarAgenda() {
+        let data;
+        let data2;
+        let dataValida = false;
+        let dataValida2 = false;
+        while (!dataValida) {
+            data = this.input("Data inicial: ");
+            dataValida = Validacao.data(data);
+        }
+        while (!dataValida2) {
+            data2 = this.input("Data final: ");
+            dataValida2 = Validacao.data(data2);
+        }
+        this.imprimeLista(this.filtrarConsultas(data,data2));
         return Estados.AGENDA;
     }
 
@@ -780,6 +846,28 @@ class CLI {
                 }
             }
         } console.log("".padEnd(61,"-"));
+    }
+
+    filtrarConsultas(dataInicial,dataFinal) {
+        let lista = [];
+        let inicio = Validacao.criaData(dataInicial);
+        let fim = Validacao.criaData(dataFinal);
+        for (let consulta of this.#consultorio.consultas) {
+            if (consulta.data_da_consulta >= inicio && consulta.dataConsulta <= fim) {
+                lista.push(consulta);
+            }
+        } return lista;
+    }
+
+    imprimeLista(lista) {
+        console.log("".padEnd(61,"-"));
+        console.log("Data".padStart(7," ") + "H.Ini".padStart(9," ") + "H.Fim".padStart(6," ") + "Tempo".padStart(6," ") + "Nome".padStart(5," ") + "Dt.Nasc.".padStart(27," "));
+        console.log("".padEnd(61,"-"));
+        for (let consulta of lista) {
+            let paciente = this.#consultorio.buscarPaciente(consulta.cpf);
+            console.log(consulta.dataString.padEnd(11," ") + consulta.horario_inicial_string.padEnd(6," ") + consulta.horario_final_string.padEnd(6," ") + "".padEnd(6," ") + paciente.nome.padEnd(17," ") + paciente.nascimentoStringo.padEnd(11," "));
+        }
+        console.log("".padEnd(61,"-"));
     }
 
     testaCPF(cpf) {
