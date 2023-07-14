@@ -556,66 +556,54 @@ class CLI {
                     resultado = this.menuPrincipal();
                     if (CLI.isBreakLoop(resultado)) break;
                     this.updateEstado(resultado);
-                    console.log("Opcao escolhida: " + resultado);
                     break;
                 case Estados.CADASTRO:
                     resultado = this.menuCadastro();
                     if (CLI.isBreakLoop(resultado)) break;
                     this.updateEstado(resultado);
-                    console.log("Opcao escolhida: " + resultado);
                     break
                 case Estados.AGENDA:
                     resultado = this.menuAgenda();
                     if (CLI.isBreakLoop(resultado)) break;
                     this.updateEstado(resultado);
-                    console.log("Opcao escolhida: " + resultado);
                     break;
                 case Estados.NOVO_PACIENTE:
                     resultado = this.novoPaciente();
                     if (CLI.isBreakLoop(resultado)) break;
                     this.updateEstado(resultado);
-                    console.log("Opcao escolhida: " + resultado);
                     break
                 case Estados.EXCLUIR_PACIENTE:
                     resultado = this.excluirPaciente();
                     if (CLI.isBreakLoop(resultado)) break;
                     this.updateEstado(resultado);
-                    console.log("Opcao escolhida: " + resultado);
                     break
                 case Estados.LISTAR_PACIENTE:
                     resultado = this.listarPacientes();
                     if (CLI.isBreakLoop(resultado)) break;
                     this.updateEstado(resultado);
-                    console.log("Opcao escolhida: " + resultado);
                     break
                 case Estados.LISTAR_CPF:
                     resultado = this.listarCPFs();
                     if (CLI.isBreakLoop(resultado)) break;
                     this.updateEstado(resultado);
-                    console.log("Opcao escolhida: " + resultado);
                     break
                 case Estados.AGENDAR_CONSULTA:
                     resultado = this.agendarConsulta();
                     if (CLI.isBreakLoop(resultado)) break;
                     this.updateEstado(resultado);
-                    console.log("Opcao escolhida: " + resultado);
                     break
                 case Estados.CANCELAR_CONSULTA:
                     resultado = this.cancelarConsulta();
                     if (CLI.isBreakLoop(resultado)) break;
                     this.updateEstado(resultado);
-                    console.log("Opcao escolhida: " + resultado);
                     break
                 case Estados.LISTAR_AGENDA:
                     resultado = this.listarAgenda();
                     if (CLI.isBreakLoop(resultado)) break;
                     this.updateEstado(resultado);
-                    console.log("Opcao escolhida: " + resultado);
                     break
                 default:
                     resultado = this;
-
-
             }
         }
     }
@@ -648,17 +636,13 @@ class CLI {
         let resposta = this.input("R: ");
         switch(Number(resposta)) {
             case 1:
-                console.log("Cadastro")
                 return Estados.CADASTRO;
             case 2:
-                console.log("Agenda")
                 return Estados.AGENDA;
             case 3:
-                console.log("Fim")
                 this.quit = true;
                 return Estados.QUIT;
             default:
-                console.log("Nao reconhecido")
                 return Estados.NAO_RECONHECIDO;
         }
     }
@@ -714,7 +698,7 @@ class CLI {
             dados[2] = this.input("Data de nascimento: ");
             dataValida = this.testaNascimento(dados[2]);
         } this.#consultorio.cadastrar(dados[0],dados[1],dados[2]);
-        console.log("Paciente cadastrado com sucesso!")
+        console.log("Paciente cadastrado com sucesso!\n")
 
         return Estados.CADASTRO;
 
@@ -727,7 +711,7 @@ class CLI {
             cpf = this.input("CPF: ");
             cpfValido = this.testaCPF(cpf);
         } this.#consultorio.descadastrar(cpf);
-        console.log("Paciente excluído com sucesso!");
+        console.log("Paciente excluído com sucesso!\n");
         return Estados.CADASTRO;
     }
 
@@ -772,9 +756,9 @@ class CLI {
 
         try {
             this.#consultorio.agendarConsulta(cpf,data,hInicial,hFinal);
-            console.log("Agendamento realizado com sucesso!");
+            console.log("Agendamento realizado com sucesso!\n");
         } catch (erro) {
-            console.log("Erro: " + erro.message);
+            console.log("\nErro: " + erro.message);
         } return Estados.AGENDA;
     }
 
@@ -800,13 +784,13 @@ class CLI {
 
         try {
             if ( !this.#consultorio.cancelarConsulta(cpf, data, hInicial) ) {
-                console.log("Erro: agendamento não encontrado");
+                console.log("\nErro: agendamento não encontrado");
             } else {
-                console.log("Erro: agendamento cancelado com sucesso!");
+                console.log("\nErro: agendamento cancelado com sucesso!");
             }
 
         } catch (erro) {
-            console.log("Erro: " + erro.message);
+            console.log("\nErro: " + erro.message);
         }
         return Estados.AGENDA;
     }
@@ -830,10 +814,10 @@ class CLI {
 
     imprimeMapa(mapa) {
         console.log("".padEnd(61,"-"));
-        console.log("CPF".padEnd(12," ") + "Nome".padEnd(33," ") + "Dt.Nasc.".padEnd(10," ") + "Idade");
+        console.log("CPF".padEnd(16," ") + "Nome".padEnd(33," ") + "Dt.Nasc.".padEnd(10," ") + "Idade");
         console.log("".padEnd(61,"-"));
         for (let key of mapa.keys()) {
-            let dado1 = key.CPF.CPF.padEnd(12, " ");
+            let dado1 = key.CPF.toString().padEnd(16, " ");
             let dado2 = key.nome.padEnd(33, " ");
             let dado3 = key.nascimentoString.padEnd(12," ");
             let dado4 = String(Validacao.calculaIdade(key.nascimentoString)).padStart(4," ");
@@ -906,15 +890,14 @@ class CLI {
     }
 
     comparaPacientesPorCPF(pacienteA, pacienteB) {
-        if (pacienteA.CPF.CPF < pacienteB.CPF.CPF) return -1;
-        if (pacienteA.CPF.CPF > pacienteB.CPF.CPF) return 1;
+        if (pacienteA.CPF.toString() < pacienteB.CPF.toString()) return -1;
+        if (pacienteA.CPF.toString() > pacienteB.CPF.toString()) return 1;
         return 0;
     }
 
 }
 
 let cli = new CLI();
-console.log((new CPF()).CPF);
-
+console.log("Exemplo de CPF Valido: " + (new CPF()).CPF);
 cli.rodar();
 
