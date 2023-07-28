@@ -2,31 +2,36 @@ import { Reader } from '../model/reader.js'
 import { ClientList } from '../model/clientlist.js'
 
 class SessionManager {
+    #path = "";
     #reader;
     #clientlist;
     #errors;
 
     constructor() {
+        this.#path = "";
         this.#reader = new Reader();
         this.#clientlist = new ClientList();
-        this.#errors = new Map();
+        this.#errors = [];
+    }
+
+    get path() {
+        return this.#path;
+    }
+
+    setPath(newPath) {
+        this.#path = newPath;
     }
 
     get reader() {
         return this.#reader;
     }
 
-    get client() {
-        return this.#clientlist.iterator();
+    get clients() {
+        return this.#clientlist;
     }
 
-    *error() {
-        for (let item of this.#errors.keys()) {
-            yield {
-                "dados": item,
-                "erros": this.#errors.get(item)
-            }
-        }
+    get errors() {
+        return this.#errors;
     }
 }
 

@@ -1,10 +1,10 @@
 import { argv } from 'node:process';
-import { readFileSync } from 'node:fs';
-import * as dv from './Utils/data-validation.js';
+import session from './session/session.js';
+import { MainController } from './controller/main-controller.js';
 
-
-let object = readFileSync(argv[2]);
-let dados = JSON.parse(object);
-for (let item of dados) {
-    console.log(item);
-}
+(function () {
+    session.setPath(argv[2]);
+    let m = new MainController();
+    m.processFile();
+    m.outputErrors();
+})();

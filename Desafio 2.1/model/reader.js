@@ -1,32 +1,38 @@
 import { readFileSync } from 'node:fs'
 
 class Reader {
-    #caminho;
-    #conteudo;
+    #path;
+    #content;
 
-    constructor(caminho) {
-        this.#caminho = caminho;
+    constructor(path = "") {
+        this.#path = path;
     }
 
-    get caminho() {
-        return this.#caminho;
+    get path() {
+        return this.#path;
     }
 
-    set caminho(novoCaminho) {
-        this.#caminho = novoCaminho;
+    setPath(newPath) {
+        this.#path = newPath;
     }
 
-    set conteudo(dados) {
-        this.#conteudo = dados;
+    setContent(data) {
+        this.#content = data;
     }
 
-    read() {
-        let dataBuffer = readFileSync(this.caminho)
-        this.conteudo(JSON.parse(dataBuffer));
+    /**
+     * Lê um arquivo .json cujo endereço está descrito na variável 'path' do objeto.
+     */
+    readJSON() {
+        let dataBuffer = readFileSync(this.path)
+        this.setContent(JSON.parse(dataBuffer));
     }
 
+    /**
+     * Iterador que retorna um dos objetos lidos anteriormente.
+     */
     *iterator() {
-        for (let item of this.#conteudo) yield item;
+        for (let item of this.#content) yield item;
     }
 }
 

@@ -1,22 +1,22 @@
 class Error {
     static get INVALID_NAME() {
-        return 1;
+        return "Nome inválido";
     }
 
     static get INVALID_DOCUMENT() {
-        return 2;
+        return "CPF inválido";
     }
 
     static get INVALID_DATE() {
-        return 3;
+        return "Data de nascimento inválida";
     }
 
     static get INVALID_INCOME() {
-        return 4;
+        return "Renda mensal inválida";
     }
 
     static get INVALID_MARITAL_STATUS() {
-        return 5;
+        return "Estado civil inválido";
     }
 }
 

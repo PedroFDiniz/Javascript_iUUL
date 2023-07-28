@@ -1,5 +1,3 @@
-import { Client } from './client.js';
-
 class ClientList {
     #clients;
 
@@ -26,3 +24,5 @@ class ClientList {
         for (let client of this.#clients) yield client;
     }
 }
+
+export { ClientList }

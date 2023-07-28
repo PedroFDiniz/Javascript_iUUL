@@ -1,6 +1,5 @@
-import { DateTime } from 'luxon';
+import * as dv from '../utils/data-validation.js';
 import { Error } from '../controller/error.js';
-import { validateCPF } from '../Utils/data-validation.js';
 
 class Client {
     #name;
@@ -17,14 +16,38 @@ class Client {
         this.#marital_status = marital_status;
     }
 
-    create(name, document_number, birthday, income_monthly, marital_status) {
+    /**
+     * Tenta criar um objeto Client validando os parâmetros passados.
+     * @param {String} name - um nome para o cliente
+     * @param {String} document_number - o cpf do cliente
+     * @param {String} birthday - data de nascimento do cliente
+     * @param {String} income_monthly - renda mensal do cliente
+     * @param {String} marital_status - estado civil do cliente
+     * @returns um objeto contendo um campo 'success', caso não hajam problemas na criação, ou um campo 'failure', caso algum erro tenha acontecido
+     */
+    static create(name, document_number, birthday, income_monthly, marital_status) {
         let errors = [];
 
-        if (name.length < 5 || name.length > 60) errors.push(Error.INVALID_NAME);
-        if (!validateCPF(document_number)) errors.push(Error.INVALID_DOCUMENT);
-        if (DateTime.fromFormat(birthday,"ddmmyyyy") < DateTime.now().minus({ year: 18 })) errors.push(Error.INVALID_DATE);
-        if (!validateIncome(income_monthly)) errors.push(Error.INVALID_INCOME);
-        if (!validateMaritalStatus(marital_status)) errors.push(Error.INVALID_MARITAL_STATUS);
+        if (name.length < 5 || name.length > 60) errors.push({
+            "campo": "Nome",
+            "erro": Error.INVALID_NAME
+        });
+        if (!dv.validateCPF(document_number)) errors.push({
+            "campo": "CPF",
+            "erro": Error.INVALID_DOCUMENT
+        });
+        if (!dv.validateBirthday(birthday)) errors.push({
+            "campo": "Data de nascimento",
+            "erro": Error.INVALID_DATE
+        });
+        if (!dv.validateIncome(income_monthly)) errors.push({
+            "campo": "Renda mensal",
+            "erro": Error.INVALID_INCOME
+        });
+        if (!dv.validateMaritalStatus(marital_status)) errors.push({
+            "campo": "Estado civil",
+            "erro": Error.INVALID_MARITAL_STATUS
+        });
 
         return (errors.length === 0?
             { success: new Client(name, document_number, birthday, income_monthly, marital_status)} :
