@@ -1,4 +1,4 @@
-import ConversionWrapper from "../model/ConversionWrapper";
+import ConversionWrapper from "../model/conversionwrapper";
 import fetchConversion from "../model/fetcher";
 
 class CLIController {

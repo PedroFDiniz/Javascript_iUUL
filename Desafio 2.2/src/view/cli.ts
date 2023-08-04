@@ -1,7 +1,7 @@
 import Input from '../utils/input.js';
 import Output from '../utils/output.js';
 import Validate from '../utils/validation.js';
-import ConversionWrapper from '../model/ConversionWrapper.js';
+import ConversionWrapper from '../model/conversionwrapper.js';
 import { formatValue, formatConversionRate } from '../utils/formatting.js';
 
 class CLI {

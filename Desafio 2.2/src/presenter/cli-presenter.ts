@@ -1,6 +1,6 @@
 import CLI from '../view/cli';
 import CLIController from '../controller/cli-controller';
-import ConversionWrapper from '../model/ConversionWrapper';
+import ConversionWrapper from "../model/conversionwrapper";
 
 class CLIPresenter {
     #controller:CLIController;
@@ -20,3 +20,5 @@ class CLIPresenter {
         }
     }
 }
+
+export default CLIPresenter;
