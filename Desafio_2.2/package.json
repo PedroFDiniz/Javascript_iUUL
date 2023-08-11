@@ -1,0 +1,22 @@
+{
+  "name": "desafio-2.2",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/form-data": "^2.5.0",
+    "@types/node": "^20.4.5",
+    "@types/node-fetch": "^2.6.4",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}
