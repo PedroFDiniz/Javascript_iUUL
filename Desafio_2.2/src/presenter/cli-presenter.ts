@@ -12,9 +12,8 @@ class CLIPresenter {
     }
 
     run() {
-        for (;;) {
+        while(!this.#view.hasQuit()) {
             let request:ConversionWrapper = this.#view.readConversionPrompts()!;
-            if (this.#view.hasQuit()) break;
             let response = this.#controller.executeRequest(request);
             this.#view.printResults(response);
         }

@@ -10,7 +10,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
 var _CLIPresenter_controller, _CLIPresenter_view;
-import CLI from '../view/cli';
+import CLI from '../view/cli.js';
 class CLIPresenter {
     constructor(controller) {
         _CLIPresenter_controller.set(this, void 0);
@@ -19,7 +19,7 @@ class CLIPresenter {
         __classPrivateFieldSet(this, _CLIPresenter_controller, controller, "f");
     }
     run() {
-        for (;;) {
+        while (!__classPrivateFieldGet(this, _CLIPresenter_view, "f").hasQuit()) {
             let request = __classPrivateFieldGet(this, _CLIPresenter_view, "f").readConversionPrompts();
             if (__classPrivateFieldGet(this, _CLIPresenter_view, "f").hasQuit())
                 break;

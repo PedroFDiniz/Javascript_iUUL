@@ -1,3 +1,4 @@
+"use strict";
 var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, state, value, kind, f) {
     if (kind === "m") throw new TypeError("Private method is not writable");
     if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
@@ -10,8 +11,9 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
 var _ConversionWrapper_from, _ConversionWrapper_to, _ConversionWrapper_value;
-class ConversionWrapper {
-    constructor(from, to, value) {
+//Object.defineProperty(exports, "__esModule", { value: true });
+var ConversionWrapper = /** @class */ (function () {
+    function ConversionWrapper(from, to, value) {
         _ConversionWrapper_from.set(this, void 0);
         _ConversionWrapper_to.set(this, void 0);
         _ConversionWrapper_value.set(this, void 0);
@@ -19,15 +21,28 @@ class ConversionWrapper {
         __classPrivateFieldSet(this, _ConversionWrapper_to, to, "f");
         __classPrivateFieldSet(this, _ConversionWrapper_value, value, "f");
     }
-    get from() {
-        return __classPrivateFieldGet(this, _ConversionWrapper_from, "f");
-    }
-    get to() {
-        return __classPrivateFieldGet(this, _ConversionWrapper_to, "f");
-    }
-    get value() {
-        return __classPrivateFieldGet(this, _ConversionWrapper_value, "f");
-    }
-}
+    Object.defineProperty(ConversionWrapper.prototype, "from", {
+        get: function () {
+            return __classPrivateFieldGet(this, _ConversionWrapper_from, "f");
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ConversionWrapper.prototype, "to", {
+        get: function () {
+            return __classPrivateFieldGet(this, _ConversionWrapper_to, "f");
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ConversionWrapper.prototype, "value", {
+        get: function () {
+            return __classPrivateFieldGet(this, _ConversionWrapper_value, "f");
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return ConversionWrapper;
+}());
 _ConversionWrapper_from = new WeakMap(), _ConversionWrapper_to = new WeakMap(), _ConversionWrapper_value = new WeakMap();
-export default ConversionWrapper;
+export default ConversionWrapper

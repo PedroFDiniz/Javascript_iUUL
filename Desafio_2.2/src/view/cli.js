@@ -31,7 +31,7 @@ class CLI {
             }
             const targetCountry = __classPrivateFieldGet(this, _CLI_input, "f").readString(`Moeda de destino: `, `Código de país inválido`, {
                 capitalize: true,
-                regExp: "/^(?!" + originCountry + ").{3}$/gim",
+                //regExp: "/^(?!" + originCountry + ").{3}$/gim",
                 isValid: Validate.validateCoutryCode,
             });
             const value = __classPrivateFieldGet(this, _CLI_input, "f").readFloat(`Valor: `, `Valor inválido`, {
@@ -43,7 +43,7 @@ class CLI {
             promise.then((result) => {
                 __classPrivateFieldGet(this, _CLI_output, "f").writeLine(result.query.from + " " +
                     formatValue(result.query.amount) +
-                    " => " + result.query.to +
+                    " => " + result.query.to + " " +
                     formatValue(result.result));
                 __classPrivateFieldGet(this, _CLI_output, "f").writeLine("Taxa: " + formatConversionRate(result.info.rate));
             });

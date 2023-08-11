@@ -44,7 +44,7 @@ class CLI {
             this.#output.writeLine(
                 result.query.from + " " +
                 formatValue(result.query.amount) +
-                " => " + result.query.to +
+                " => " + result.query.to + " " +
                 formatValue(result.result));
             this.#output.writeLine("Taxa: " + formatConversionRate(result.info.rate));
          } );

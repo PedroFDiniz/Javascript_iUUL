@@ -1,4 +1,5 @@
-import Output from 'output.js';
+import Output from './output.js';
+import PromptSync from 'prompt-sync';
 
 class Input {
     #prompt;
